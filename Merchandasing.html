@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="./index.js"></script>
+    <title>Merchandasing</title>
+    <script
+    src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
+    integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo="
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    $(function () {
+
+      
+$("#aumentar").click(function(event){
+  let valor = $("#cant").value
+  if (valor < 10){
+    valor ++
+  }
+})
+
+
+
+$("#disminuir").click(function(event){
+  if (valor > 0){
+    valor --
+  }
+})
+
+function validarValor(cant) {
+  if(!isNaN(cant)){ 
+    if(cant > 0 && cant <10){
+      return cant;
+}}}
+function validarRadio(){
+  let $seleccion = $("input:checked");
+  return $seleccion.length > 0;
+}
+
+let $err_cant = $('#err_cant')
+let $err_pago = $('#err_pago')
+var $cuantas = $(`input[type="number"]`);
+
+
+$cuantas.blur(function (event) {
+  if (!validarValor($(this).val())) {                       
+    $err_cant.show();                      
+    /* this.focus(); */                             
+  } else $err_cant.hide();                
+
+});  
+//////////////////// comprar TOTAL Y DESCUENTO ////////////////////
+
+function descuento(){
+let $total = 0;
+let $cant = parseInt($cuantas.val())
+let $precioremera = 10;
+$total += $cant * $precioremera;
+
+  if($("#visa").is(':checked')) {
+    if($cant > 2){
+      $total -= ($total * 0.05);
+      return $total;                              // Retorna CON descuento VISA                           
+    } else {
+      return $total;                              // Retorna SIN descuento VISA 
+    }
+
+  }
+  else if ($("#mc").is(':checked')){
+    if($cant > 2){
+      $total -= ($total * 0.025);
+      return $total;                              // Retorna CON descuento MC 
+    }else {
+      return $total;                              // Retorna SIN descuento MC 
+
+    }
+  } else {
+    return $total;
+  }
+}
+//////////////////// VALIDACION A NIVEL DE FORMULARIO ////////////////////
+
+function comprar() {
+  if (!validarValor($cuantas.val())) {          // Comprobacion campo 3
+      $err_cant.show();                  
+      return false;                           // Error en campo 3
+  } else if (!validarRadio($("#tarjeta"))){
+    $err_pago.show();
+    return false;
+
+  } 
+  else {
+      return true;                           
+  }                    
+}
+// Envío del formulario
+$('#comprar').click(function(event) {
+  if (!comprar()) {                             
+    event.preventDefault();                    
+    alert("no es valido")
+  } else {
+    $err_pago.hide();
+    $("#mostrar").html("€" + descuento());
+    alert("el total a pagar es  " + "€" + descuento())
+  }
+});
+
+});
+
+
+  </script>
+  
+</head>
+<body id="bodyDeCompra">
+    <header>
+        <div id="tech">
+          <a href="./index.html"
+            ><img src="./assets/+TECH.png" alt="logo +tech"
+          /></a>
+        </div>
+        <ul id="navBar">
+          <li><a href="./index.html">Bandas</a></li>
+          <li><a href="./Merchandasing.html">Merch</a></li>
+          <li><a href="./musica.html">Musica</a></li>
+        </ul>
+      </header>
+      <form action="" method="post">
+      <div class="remera">
+        <img src="./assets/remeras.png" alt="remera negra con logo">
+        <p>Camiseta Lisa Negra +TECH</p>
+        <br>
+        <p>Precio: €10</p>
+        <label for="cantidad">Cantidad:</label>
+        <div id="contador">
+          <input class="botones" value="-" onclick="decrementar()" ></input>
+          <input  type="number" value="0" id="item" name="item" disabled>
+          <input class="botones" value="+" onclick="incrementar()"></input>
+          
+          <output class="error" id="err_cant"
+          >*Debe seleccionar la cantidad </output
+        >
+      </div>
+        <br />
+        <div id="tarjeta">
+          <input type="radio" name="pago" undefined  id="visa">Visa
+          <input type="radio" name="pago" id="mc">Mastercard
+        </div>
+        <output class="error" id="err_pago"
+          >*Debe seleccionar un metodo de pago</output
+          >
+          <input type="button" value="comprar" id="comprar">
+          <div>
+          <p id="total">Total:</p>
+          <p id="mostrar"></p>
+        
+      </div>
+    </form>
+    <form >
+
+</form>
+
+</body>
+</html>
